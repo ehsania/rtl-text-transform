@@ -1,0 +1,144 @@
+.playground-main {
+  display: grid;
+  gap: clamp(18px, 3vw, 28px);
+  padding-block: clamp(24px, 4vw, 40px) clamp(36px, 6vw, 64px);
+}
+
+.playground-intro {
+  display: grid;
+  gap: 10px;
+}
+
+.playground-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
+  height: 40px;
+  padding: 3px;
+  border: 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, currentColor 7%, transparent);
+}
+
+.playground-tab {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 7px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.playground-tab:hover {
+  color: var(--text);
+}
+
+.playground-tab[aria-selected="true"] {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.playground-tab:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 2px;
+}
+
+.playground-description {
+  margin: 0 auto;
+  max-width: 62ch;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.playground-preview {
+  display: grid;
+}
+
+.playground-stage-host .stage {
+  width: 100%;
+  min-height: clamp(280px, 42vw, 420px);
+}
+
+.playground-controls {
+  display: grid;
+  gap: 24px;
+  padding: clamp(16px, 2.4vw, 24px);
+  border-radius: 10px;
+  background: var(--surface);
+}
+
+.playground-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 18px;
+  padding-bottom: 0;
+  border: 0;
+}
+
+.playground-toolbar-controls,
+.playground-toolbar-group,
+.playground-toolbar-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px 10px;
+}
+
+.playground-toolbar-controls {
+  gap: 8px 18px;
+}
+
+.playground-toolbar-label {
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.playground-groups {
+  display: grid;
+  gap: 32px;
+}
+
+.playground-groups .control-grid {
+  padding: 0;
+}
+
+.playground-hint {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+@media (max-width: 680px) {
+  .playground-tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    justify-content: flex-start;
+  }
+
+  .playground-tab {
+    flex: 0 0 auto;
+  }
+
+  .playground-toolbar {
+    align-items: flex-start;
+  }
+}

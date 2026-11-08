@@ -1,0 +1,10 @@
+node_modules/
+dist/
+dist-demo/
+coverage/
+package-lock.json
+*.tgz
+*.woff2
+*.ttf
+*.png
+*.wasm

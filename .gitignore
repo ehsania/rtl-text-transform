@@ -1,0 +1,25 @@
+node_modules/
+dist/
+dist-demo/
+coverage/
+*.tgz
+
+# environment and secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+
+# tooling and logs
+*.log
+.vite/
+*.tsbuildinfo
+.eslintcache
+
+# editors and OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json

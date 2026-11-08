@@ -1,0 +1,106 @@
+{
+  "name": "rtl-text-transform",
+  "version": "0.1.0",
+  "description": "Zero-dependency goo and changed-hunk rise text morphs for Arabic, Persian and other RTL scripts.",
+  "license": "MIT",
+  "author": "Ali Ehsanfar (https://github.com/ehsania)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ehsania/rtl-text-transform.git"
+  },
+  "homepage": "https://github.com/ehsania/rtl-text-transform#readme",
+  "bugs": {
+    "url": "https://github.com/ehsania/rtl-text-transform/issues"
+  },
+  "keywords": [
+    "rtl",
+    "arabic",
+    "persian",
+    "farsi",
+    "text-morph",
+    "text-animation",
+    "goo",
+    "rise",
+    "typescript",
+    "zero-dependency"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.cts",
+        "default": "./dist/index.cjs"
+      }
+    },
+    "./react": {
+      "import": {
+        "types": "./dist/react.d.ts",
+        "default": "./dist/react.js"
+      },
+      "require": {
+        "types": "./dist/react.d.cts",
+        "default": "./dist/react.cjs"
+      }
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "npm run typecheck && tsup && vite build",
+    "build:lib": "tsup",
+    "build:demo": "vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "prepublishOnly": "npm test && npm run build:lib"
+  },
+  "peerDependencies": {
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.0.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.7",
+    "globals": "^17.14.0",
+    "jsdom": "^26.0.0",
+    "prettier": "^3.9.10",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.72.1",
+    "vite": "^7.0.0",
+    "vitest": "^3.0.0"
+  }
+}

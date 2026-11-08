@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en" dir="ltr" data-theme="light" data-theme-preference="system">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>rtl-text-transform — goo + rise morphs for Persian and Arabic</title>
+    <meta
+      name="description"
+      content="A zero-dependency TypeScript library for goo and changed-hunk rise text morphs that preserve Arabic and Persian shaping, joins and ZWNJ."
+    />
+    <meta name="theme-color" content="#f5f5f5" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="rtl-text-transform" />
+    <meta
+      property="og:description"
+      content="Goo and changed-hunk rise text morphs that preserve Arabic and Persian shaping."
+    />
+    <meta property="og:image" content="https://ehsania.github.io/rtl-text-transform/og.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="The word کتاب‌ها with the shared کتاب in dark text and the changed ها in gray."
+    />
+    <meta property="og:site_name" content="rtl-text-transform" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="rtl-text-transform" />
+    <meta
+      name="twitter:description"
+      content="Goo and changed-hunk rise text morphs that preserve Arabic and Persian shaping."
+    />
+    <meta name="twitter:image" content="https://ehsania.github.io/rtl-text-transform/og.png" />
+    <meta
+      name="twitter:image:alt"
+      content="The word کتاب‌ها with the shared کتاب in dark text and the changed ها in gray."
+    />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <script>
+      (function () {
+        var key = "rtl-text-transform-theme";
+        var preference = "system";
+        try {
+          var stored = localStorage.getItem(key);
+          if (stored === "light" || stored === "dark" || stored === "system") {
+            preference = stored;
+          }
+        } catch (error) {}
+        var systemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        var theme =
+          preference === "light" || preference === "dark"
+            ? preference
+            : systemDark
+              ? "dark"
+              : "light";
+        var root = document.documentElement;
+        root.dataset.theme = theme;
+        root.dataset.themePreference = preference;
+        var meta = document.querySelector('meta[name="theme-color"]');
+        if (meta) {
+          meta.setAttribute("content", theme === "dark" ? "#0d0d0d" : "#f5f5f5");
+        }
+      })();
+    </script>
+    <link rel="stylesheet" href="/landing/site.css" />
+    <script type="module" src="/landing/main.ts"></script>
+  </head>
+  <body>
+    <div class="page">
+      <header class="site-header">
+        <div class="site-header-top">
+          <div class="identity">
+            <h1>rtl-text-transform</h1>
+            <span class="version">v0.1.0</span>
+          </div>
+          <div class="header-actions">
+            <nav class="icon-links" aria-label="Project links">
+              <a
+                class="icon-button"
+                data-link="github"
+                data-icon="github"
+                href="https://github.com/ehsania/rtl-text-transform"
+                aria-label="GitHub"
+                title="GitHub"
+              ></a>
+              <a
+                class="icon-button"
+                data-icon="play"
+                href="./playground/"
+                aria-label="Playground"
+                title="Playground"
+              ></a>
+            </nav>
+            <div class="theme-switch" role="group" aria-label="Theme">
+              <button
+                type="button"
+                data-theme-choice="light"
+                data-icon="sun"
+                aria-label="Light"
+                title="Light"
+                aria-pressed="false"
+              ></button>
+              <button
+                type="button"
+                data-theme-choice="dark"
+                data-icon="moon"
+                aria-label="Dark"
+                title="Dark"
+                aria-pressed="false"
+              ></button>
+              <button
+                type="button"
+                data-theme-choice="system"
+                data-icon="system"
+                aria-label="System"
+                title="System"
+                aria-pressed="false"
+              ></button>
+            </div>
+          </div>
+        </div>
+        <p class="tagline">fluid text transition for rtl language</p>
+        <p class="reduced-note" data-reduced-note hidden>
+          Reduced motion is on — morphs use a short opacity cross-fade.
+        </p>
+      </header>
+
+      <main>
+        <div id="bento-root"></div>
+      </main>
+
+      <footer class="site-footer">
+        <span>rtl-text-transform v0.1.0 · MIT</span>
+        <nav aria-label="Footer links">
+          <a data-link="github" href="https://github.com/ehsania/rtl-text-transform">GitHub</a>
+          <a data-link="npm" href="https://www.npmjs.com/package/rtl-text-transform">npm</a>
+        </nav>
+      </footer>
+    </div>
+  </body>
+</html>

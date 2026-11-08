@@ -1,0 +1,236 @@
+/*
+ * Inline slider — shared by the playground and the landing examples.
+ *
+ * The native range input remains the interaction layer; everything below
+ * draws over it. All colour is derived from the control's text colour, so
+ * the same rules work in both light and dark themes.
+ */
+
+.inline-slider,
+.control.inline-slider {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-width: 0;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: color-mix(in srgb, currentColor 7%, transparent);
+  color: var(--text, var(--fg, currentColor));
+  font-size: 13px;
+  overflow: visible;
+  isolation: isolate;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.inline-slider .inline-slider__label {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  z-index: 2;
+  max-width: 40%;
+  overflow: hidden;
+  color: inherit;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.inline-slider .inline-slider__value {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  z-index: 2;
+  max-width: 40%;
+  overflow: hidden;
+  color: inherit;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 18px;
+  letter-spacing: -0.025em;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  pointer-events: none;
+  transform: translateY(-50%);
+}
+
+.inline-slider__ticks {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.inline-slider__ticks i {
+  position: absolute;
+  top: 50%;
+  display: block;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 25%, transparent);
+  transform: translateY(-50%);
+}
+
+.inline-slider__fill-clip {
+  position: absolute;
+  inset: 0 2px;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.inline-slider__fill {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: color-mix(in srgb, currentColor 15%, transparent);
+  transform: translateX(-100%);
+  will-change: transform;
+}
+
+.inline-slider__thumb {
+  position: absolute;
+  top: 8px;
+  left: 0;
+  z-index: 3;
+  width: 4px;
+  height: 24px;
+  color: inherit;
+  pointer-events: none;
+  transform: translateX(8px);
+  will-change: transform;
+}
+
+.inline-slider__thumb-inner {
+  position: absolute;
+  inset: 0;
+  transition: transform 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.inline-slider.is-dragging .inline-slider__thumb-inner {
+  transform: scaleY(1.35);
+}
+
+.inline-slider__bar {
+  position: absolute;
+  inset: 0;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.inline-slider__dot {
+  position: absolute;
+  left: 0;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+.inline-slider__dot--top {
+  top: 0;
+}
+
+.inline-slider__dot--bottom {
+  bottom: 0;
+}
+
+.inline-slider.is-ready .inline-slider__thumb,
+.inline-slider.is-ready .inline-slider__fill {
+  transition: transform 240ms cubic-bezier(0.22, 1.2, 0.36, 1);
+}
+
+.inline-slider.is-dragging .inline-slider__thumb,
+.inline-slider.is-dragging .inline-slider__fill {
+  transition: none;
+}
+
+.inline-slider .inline-slider__input,
+.inline-slider .inline-slider__input[type="range"] {
+  position: absolute;
+  top: 0;
+  right: 12px;
+  bottom: 0;
+  left: 8px;
+  z-index: 4;
+  width: auto;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  opacity: 0;
+  background: transparent;
+  accent-color: transparent;
+  cursor: grab;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.inline-slider .inline-slider__input:active {
+  cursor: grabbing;
+}
+
+.inline-slider .inline-slider__input:focus {
+  outline: none;
+}
+
+.inline-slider__input::-webkit-slider-runnable-track {
+  height: 100%;
+  border: 0;
+  background: transparent;
+}
+
+.inline-slider__input::-webkit-slider-thumb {
+  width: 1px;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.inline-slider__input::-moz-range-track {
+  height: 100%;
+  border: 0;
+  background: transparent;
+}
+
+.inline-slider__input::-moz-range-thumb {
+  width: 1px;
+  height: 100%;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+
+.inline-slider:has(.inline-slider__input:focus-visible) {
+  outline: 2px solid color-mix(in srgb, currentColor 55%, transparent);
+  outline-offset: 2px;
+}
+
+@supports not selector(:has(*)) {
+  .inline-slider:focus-within {
+    outline: 2px solid color-mix(in srgb, currentColor 55%, transparent);
+    outline-offset: 2px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .inline-slider__thumb,
+  .inline-slider__fill,
+  .inline-slider__thumb-inner {
+    transition: none;
+  }
+}
