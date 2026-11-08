@@ -1,5 +1,6 @@
 import { DEFAULT_RISE_EASING } from "./easing";
 import type { EasingFunction } from "./easing";
+import { MAX_BLUR_PX } from "./math";
 
 export type MorphDirection = "rtl" | "ltr" | "auto";
 
@@ -41,6 +42,11 @@ export type MorphCallback = (from: string, to: string) => void;
 export interface GooEffectOptions {
   /** Blur strength in em, scaled by the host's computed font size. */
   blur?: number;
+  /**
+   * Maximum goo blur in pixels. Defaults to 40px and is clamped to 0–100px.
+   * Lower values are cheaper to render.
+   */
+  maxBlur?: number;
   /** Alpha threshold T in "0 0 0 255 -T". Clamped to 0–255. */
   threshold?: number;
   /** Keep the SVG filter mounted while the text is at rest. */
@@ -123,6 +129,7 @@ export interface Morph {
 export interface ResolvedGoo {
   enabled: boolean;
   blur: number;
+  maxBlur: number;
   threshold: number;
   atRest: boolean;
 }
@@ -146,9 +153,12 @@ export interface ResolvedEffects {
   rise: ResolvedRise;
 }
 
+export const DEFAULT_MAX_GOO_BLUR_PX = 40;
+
 export const DEFAULT_GOO: ResolvedGoo = {
   enabled: true,
   blur: 0.075,
+  maxBlur: DEFAULT_MAX_GOO_BLUR_PX,
   threshold: 140,
   atRest: true,
 };
@@ -185,6 +195,7 @@ function gooFromOptions(options: GooEffectOptions, base: ResolvedGoo): ResolvedG
   return {
     enabled: true,
     blur: nonNegative(options.blur, base.blur),
+    maxBlur: clamp(options.maxBlur, 0, MAX_BLUR_PX, base.maxBlur),
     threshold:
       options.threshold === undefined ? base.threshold : normalizeThreshold(options.threshold),
     atRest: typeof options.atRest === "boolean" ? options.atRest : base.atRest,
