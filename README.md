@@ -290,6 +290,7 @@ interface MorphEffects {
 | Option      | Type      | Default | Description                                                                                                |
 | ----------- | --------- | ------- | ---------------------------------------------------------------------------------------------------------- |
 | `blur`      | `number`  | `0.075` | Layer blur strength in `em`, scaled by the host's computed font size.                                      |
+| `maxBlur`   | `number`  | `40`    | Upper bound for the goo blur in pixels. Clamped to 0–100. Lower values are cheaper to render.              |
 | `threshold` | `number`  | `140`   | The `T` in the alpha row `0 0 0 255 -T`. Clamped to 0–255.                                                 |
 | `atRest`    | `boolean` | `true`  | Apply the goo CSS filter while the text is at rest. When false, the filter is only applied during a morph. |
 
@@ -464,6 +465,14 @@ Atomization uses:
 
 The consequence: a font-specific ligature that is not identifiable from Unicode alone cannot always be predicted. Rare ligatures may animate as changed text instead of staying fixed. Common Arabic/Persian shaping, joins, ZWNJ and lam-alef are handled. This is the cost of staying fully zero-dependency.
 
+## Performance
+
+- The host font size is read once per morph, not on every animation frame.
+- Transparent layers skip their blur entirely.
+- Goo and rise blur are composed into one blur pass per element.
+- The goo blur is capped by `effects.goo.maxBlur` (40px by default). Raise it for a softer look, lower it for heavy pages.
+- Use `effects.goo.atRest: false` when many morphs share a page.
+
 ## Accessibility
 
 - Both animated layers are `aria-hidden="true"`.
@@ -484,7 +493,7 @@ Importing the package is safe on the server: no DOM access happens at module loa
 - **One host filter.** If the host already has a CSS `filter`, the library overrides it while active and restores the inline value on `destroy()`.
 - **`filter` scale is not accounted for.** Blur uses the computed font size in CSS pixels. A parent `transform: scale()` scales the result but not the blur amount.
 - **Long strings do not wrap.** Layers use `white-space: nowrap`. Size the host for the longest phrase, or shorten the list.
-- **Blur is capped at 100px**, exactly as in the original goo demo.
+- **Blur is capped at `maxBlur`** (40px by default, hard maximum 100px). Lower it further on low-powered devices or when many morphs share a page.
 - **Rest-first timing.** Auto-cycling waits `restTime` before the first morph and after every completed morph.
 - **No font loading management.** Use `font-display` and wait for `document.fonts.ready` if the morph must begin after a webfont loads.
 
