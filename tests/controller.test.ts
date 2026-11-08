@@ -331,7 +331,8 @@ describe("rise morph", () => {
 
     expect(Number.parseFloat(enter[0]!.style.opacity)).toBe(0);
     expect(enter[0]!.style.transform).toContain("translate(");
-    expect(enter[0]!.style.filter).toMatch(/^blur\(/);
+    // A fully transparent hunk skips its blur entirely.
+    expect(enter[0]!.style.filter).toBe("none");
     expect(matched[0]!.style.opacity).toBe("1");
     expect(matched[0]!.style.filter).toBe("none");
     expect(host.style.filter).toBe("none");
@@ -502,7 +503,8 @@ describe("combined morph", () => {
     clock.frames(5, 100);
 
     const enterFilter = enter[0]!.style.filter;
-    expect(enterFilter.match(/blur\(/g)).toHaveLength(2);
+    expect(enterFilter.match(/blur\(/g)).toHaveLength(1);
+    expect(enterFilter).toMatch(/^blur\([\d.]+px\)$/);
     expect(Number.parseFloat(enter[0]!.style.opacity)).toBeGreaterThan(0);
     expect(Number.parseFloat(enter[0]!.style.opacity)).toBeLessThan(1);
     expect(matched[0]!.style.filter).toBe("none");
@@ -594,5 +596,36 @@ describe("reduced motion", () => {
     expect(incoming.style.opacity).toBe("1");
 
     morph.destroy();
+  });
+});
+
+describe("frame budget", () => {
+  it("does not read computed styles on every animation frame", async () => {
+    const clock = installFrameClock();
+    const host = createHost("سلام");
+    const morph = createMorph(host, {
+      morphTime: 1,
+      effects: { goo: true, rise: true },
+      autoplay: false,
+    });
+    const { incoming } = layers(host);
+    const spy = vi.spyOn(window, "getComputedStyle");
+
+    const promise = morph.setText("سلام جهان");
+    const callsAfterStart = spy.mock.calls.length;
+    expect(callsAfterStart).toBeLessThanOrEqual(2);
+
+    clock.step(0);
+    clock.step(100);
+    clock.step(100);
+
+    expect(spy.mock.calls.length).toBe(callsAfterStart);
+    expect(chunks(incoming, "add")[0]!.style.filter).toMatch(/^blur\(/);
+
+    clock.frames(10, 100);
+
+    await promise;
+    morph.destroy();
+    spy.mockRestore();
   });
 });

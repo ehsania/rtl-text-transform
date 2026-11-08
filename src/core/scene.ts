@@ -103,7 +103,7 @@ function styleChunk(span: HTMLSpanElement, dir: SceneOptions["dir"]): void {
   span.style.direction = dir === "auto" ? "inherit" : dir;
   span.style.verticalAlign = "baseline";
   span.style.transformOrigin = "center center";
-  span.style.willChange = "transform, opacity, filter";
+  span.style.willChange = "transform, opacity";
   span.style.pointerEvents = "none";
   span.style.setProperty("letter-spacing", "0", "important");
 }

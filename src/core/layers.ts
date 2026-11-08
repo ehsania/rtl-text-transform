@@ -141,6 +141,15 @@ export function resetLayer(layer: MorphLayer): void {
   layer.line.style.transform = "none";
 }
 
+/** Write an inline style only when it changes. */
+export function setStyleIfChanged(
+  el: HTMLElement,
+  property: "opacity" | "filter" | "transform",
+  value: string,
+): void {
+  if (el.style[property] !== value) el.style[property] = value;
+}
+
 export function clearLayer(layer: MorphLayer): void {
   layer.line.replaceChildren();
   resetLayer(layer);
@@ -157,20 +166,29 @@ export function setLayerText(layer: MorphLayer, text: string): void {
   layer.line.replaceChildren(text);
 }
 
+const MIN_VISIBLE_OPACITY = 0.01;
+
 export function applyGooState(
   layer: MorphLayer,
   lightFraction: number,
   fontSizePx: number,
   blurEm: number,
+  maxBlurPx?: number,
 ): void {
-  const visual = visualForFraction(lightFraction, fontSizePx, blurEm);
-  layer.line.style.opacity = String(visual.opacity);
-  layer.line.style.filter = visual.blurPx > 0 ? `blur(${visual.blurPx}px)` : "none";
+  const visual = visualForFraction(lightFraction, fontSizePx, blurEm, maxBlurPx);
+  const opacity = visual.opacity;
+  const filter =
+    opacity < MIN_VISIBLE_OPACITY || visual.blurPx < 0.01
+      ? "none"
+      : `blur(${visual.blurPx.toFixed(2)}px)`;
+  setStyleIfChanged(layer.line, "opacity", String(opacity));
+  setStyleIfChanged(layer.line, "filter", filter);
 }
 
 export function applyFadeState(layer: MorphLayer, opacity: number): void {
-  layer.line.style.opacity = String(Math.max(0, Math.min(1, opacity)));
-  layer.line.style.filter = "none";
+  const clamped = Math.max(0, Math.min(1, opacity));
+  setStyleIfChanged(layer.line, "opacity", String(clamped));
+  setStyleIfChanged(layer.line, "filter", "none");
 }
 
 export function setLiveText(el: HTMLSpanElement, text: string): void {

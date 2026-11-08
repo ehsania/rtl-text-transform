@@ -28,6 +28,17 @@ describe("blurForFraction", () => {
     expect(blurForFraction(0.0001, 400, 1)).toBe(MAX_BLUR_PX);
   });
 
+  it("honours a custom blur cap", () => {
+    expect(blurForFraction(0, 100, 0.075, 40)).toBe(40);
+    expect(blurForFraction(0.1, 100, 0.075, 40)).toBe(40);
+    expect(blurForFraction(0.5, 100, 0.075, 40)).toBeCloseTo(7.5, 6);
+  });
+
+  it("falls back to the hard cap for an invalid custom cap", () => {
+    expect(blurForFraction(0.1, 100, 10, Number.NaN)).toBe(MAX_BLUR_PX);
+    expect(blurForFraction(0.1, 100, 10, 500)).toBe(MAX_BLUR_PX);
+  });
+
   it("is monotonic as the layer becomes sharper", () => {
     const samples = [0, 0.01, 0.1, 0.25, 0.5, 0.75, 0.99, 1].map((f) =>
       blurForFraction(f, 120, 0.075),

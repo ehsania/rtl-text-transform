@@ -18,6 +18,7 @@ import {
   resetLayer,
   setLayerText,
   setLiveText,
+  setStyleIfChanged,
   sizeHost,
 } from "./layers";
 import type { MorphStage } from "./layers";
@@ -124,6 +125,12 @@ export function createMorph(el: HTMLElement, options: MorphOptions = {}): Morph 
     if (Number.isFinite(parsed) && parsed > 0) return parsed;
     const inline = Number.parseFloat(el.style.fontSize);
     return Number.isFinite(inline) && inline > 0 ? inline : DEFAULT_FONT_SIZE;
+  }
+
+  let transitionFontSize = readFontSize();
+
+  function refreshFontSize(): void {
+    transitionFontSize = readFontSize();
   }
 
   function readDirection(): { dir: MorphDirection; rtl: boolean } {
@@ -249,9 +256,14 @@ export function createMorph(el: HTMLElement, options: MorphOptions = {}): Morph 
 
   function renderGooOrFade(tr: Transition, eased: number): void {
     if (tr.mode === "goo" && goo.enabled) {
-      const fontSize = readFontSize();
-      applyGooState(stage.outgoing, tr.outStart * (1 - eased), fontSize, goo.blur);
-      applyGooState(stage.incoming, eased, fontSize, goo.blur);
+      applyGooState(
+        stage.outgoing,
+        tr.outStart * (1 - eased),
+        transitionFontSize,
+        goo.blur,
+        goo.maxBlur,
+      );
+      applyGooState(stage.incoming, eased, transitionFontSize, goo.blur, goo.maxBlur);
     } else {
       applyFadeState(stage.outgoing, tr.outStart * (1 - eased));
       applyFadeState(stage.incoming, eased);
@@ -267,13 +279,13 @@ export function createMorph(el: HTMLElement, options: MorphOptions = {}): Morph 
     const elapsed = Math.max(0, Math.min(duration, tr.elapsed));
     const global = duration > 0 ? clamp01(elapsed / duration) : 1;
     const globalEased = ease(global);
-    const fontSize = readFontSize();
+    const fontSize = transitionFontSize;
 
     for (let order = 0; order < tr.enter.length; order += 1) {
       const record = tr.enter[order]!;
       const local = easeRise(enterProgress(elapsed, order, timing));
       const gooOpacity = goo.enabled ? opacityForFraction(local) : local;
-      const gooBlur = goo.enabled ? blurForFraction(local, fontSize, goo.blur) : 0;
+      const gooBlur = goo.enabled ? blurForFraction(local, fontSize, goo.blur, goo.maxBlur) : 0;
       const motion = enterTransform(
         local,
         rise.travel,
@@ -281,9 +293,14 @@ export function createMorph(el: HTMLElement, options: MorphOptions = {}): Morph 
         rise.blur,
         tr.flowByChunk?.get(record.chunk.id) ?? tr.flow,
       );
-      record.span.style.opacity = String(gooOpacity);
-      record.span.style.filter = combineBlur(gooBlur, motion.blurEm * fontSize);
-      record.span.style.transform = `translate(${(motion.xEm * fontSize).toFixed(2)}px, ${(motion.yEm * fontSize).toFixed(2)}px) scale(${motion.scale.toFixed(4)})`;
+      const filter = gooOpacity < 0.01 ? "none" : combineBlur(gooBlur, motion.blurEm * fontSize);
+      setStyleIfChanged(record.span, "opacity", String(gooOpacity));
+      setStyleIfChanged(record.span, "filter", filter);
+      setStyleIfChanged(
+        record.span,
+        "transform",
+        `translate(${(motion.xEm * fontSize).toFixed(2)}px, ${(motion.yEm * fontSize).toFixed(2)}px) scale(${motion.scale.toFixed(4)})`,
+      );
     }
 
     for (let order = 0; order < tr.exit.length; order += 1) {
@@ -291,7 +308,7 @@ export function createMorph(el: HTMLElement, options: MorphOptions = {}): Morph 
       const local = easeRise(exitProgress(elapsed, order, timing));
       const remaining = 1 - local;
       const gooOpacity = goo.enabled ? opacityForFraction(remaining) : remaining;
-      const gooBlur = goo.enabled ? blurForFraction(remaining, fontSize, goo.blur) : 0;
+      const gooBlur = goo.enabled ? blurForFraction(remaining, fontSize, goo.blur, goo.maxBlur) : 0;
       const motion = exitTransform(
         local,
         rise.travel,
@@ -299,15 +316,24 @@ export function createMorph(el: HTMLElement, options: MorphOptions = {}): Morph 
         rise.blur,
         tr.flowByChunk?.get(record.chunk.id) ?? tr.flow,
       );
-      record.span.style.opacity = String(gooOpacity);
-      record.span.style.filter = combineBlur(gooBlur, motion.blurEm * fontSize);
-      record.span.style.transform = `translate(${(motion.xEm * fontSize).toFixed(2)}px, ${(motion.yEm * fontSize).toFixed(2)}px) scale(${motion.scale.toFixed(4)})`;
+      const filter = gooOpacity < 0.01 ? "none" : combineBlur(gooBlur, motion.blurEm * fontSize);
+      setStyleIfChanged(record.span, "opacity", String(gooOpacity));
+      setStyleIfChanged(record.span, "filter", filter);
+      setStyleIfChanged(
+        record.span,
+        "transform",
+        `translate(${(motion.xEm * fontSize).toFixed(2)}px, ${(motion.yEm * fontSize).toFixed(2)}px) scale(${motion.scale.toFixed(4)})`,
+      );
     }
 
     for (const record of scene.matched) {
-      record.span.style.opacity = "1";
-      record.span.style.filter = "none";
-      record.span.style.transform = `translate(${(record.dx * (1 - globalEased)).toFixed(2)}px, ${(record.dy * (1 - globalEased)).toFixed(2)}px)`;
+      setStyleIfChanged(record.span, "opacity", "1");
+      setStyleIfChanged(record.span, "filter", "none");
+      setStyleIfChanged(
+        record.span,
+        "transform",
+        `translate(${(record.dx * (1 - globalEased)).toFixed(2)}px, ${(record.dy * (1 - globalEased)).toFixed(2)}px)`,
+      );
     }
   }
 
@@ -405,6 +431,8 @@ export function createMorph(el: HTMLElement, options: MorphOptions = {}): Morph 
     if (paused) return snapTo(to);
     if (transition && transition.to === to) return transition.promise;
     if (!transition && to === currentText) return Promise.resolve();
+
+    transitionFontSize = readFontSize();
 
     let fromText: string;
     let outStart = 1;
@@ -601,6 +629,7 @@ export function createMorph(el: HTMLElement, options: MorphOptions = {}): Morph 
 
   let observer: IntersectionObserver | null = null;
   const view = doc.defaultView;
+  view?.addEventListener("resize", refreshFontSize);
   if (view && typeof view.IntersectionObserver === "function") {
     observer = new view.IntersectionObserver(
       (entries) => {
@@ -677,6 +706,7 @@ export function createMorph(el: HTMLElement, options: MorphOptions = {}): Morph 
 
   function applyUpdate(partial: Partial<MorphOptions>): void {
     if (destroyed) return;
+    refreshFontSize();
 
     if (partial.words !== undefined) {
       const nextWords = Array.isArray(partial.words)
@@ -701,6 +731,7 @@ export function createMorph(el: HTMLElement, options: MorphOptions = {}): Morph 
           nextGoo.enabled !== goo.enabled ||
           nextGoo.threshold !== goo.threshold ||
           nextGoo.blur !== goo.blur ||
+          nextGoo.maxBlur !== goo.maxBlur ||
           nextGoo.atRest !== goo.atRest;
         goo = nextGoo;
       }
@@ -791,6 +822,7 @@ export function createMorph(el: HTMLElement, options: MorphOptions = {}): Morph 
     paused = true;
     stopLoop();
     doc.removeEventListener("visibilitychange", onVisibilityChange);
+    view?.removeEventListener("resize", refreshFontSize);
     observer?.disconnect();
     observer = null;
 

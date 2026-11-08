@@ -29,12 +29,13 @@ describe("resolveInitialEffects", () => {
 
   it("merges effect objects with the defaults", () => {
     const effects = resolveInitialEffects({
-      goo: { blur: 0.2, threshold: 400 },
+      goo: { blur: 0.2, threshold: 400, maxBlur: 64 },
       rise: { travel: 0.5, scale: 2, flow: "down", minChunk: 3.9 },
     });
 
     expect(effects.goo.enabled).toBe(true);
     expect(effects.goo.blur).toBe(0.2);
+    expect(effects.goo.maxBlur).toBe(64);
     expect(effects.goo.threshold).toBe(255);
     expect(effects.goo.atRest).toBe(DEFAULT_GOO.atRest);
 
@@ -52,6 +53,13 @@ describe("resolveInitialEffects", () => {
     for (const flow of ["up", "down", "left", "right"] as const) {
       expect(resolveInitialEffects({ rise: { flow } }).rise.flow).toBe(flow);
     }
+  });
+
+  it("clamps the goo blur budget into 0–100px", () => {
+    expect(resolveInitialEffects(undefined).goo.maxBlur).toBe(40);
+    expect(resolveInitialEffects({ goo: { maxBlur: -5 } }).goo.maxBlur).toBe(0);
+    expect(resolveInitialEffects({ goo: { maxBlur: 999 } }).goo.maxBlur).toBe(100);
+    expect(resolveInitialEffects({ goo: { maxBlur: Number.NaN } }).goo.maxBlur).toBe(40);
   });
 
   it("ignores non-finite numbers", () => {

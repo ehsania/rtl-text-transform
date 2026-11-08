@@ -73,12 +73,10 @@ export function reportCallbackError(error: unknown): void {
 }
 
 export function combineBlur(gooPx: number, risePx: number): string {
-  const goo = Math.max(0, gooPx);
-  const rise = Math.max(0, risePx);
-  if (goo < 0.01 && rise < 0.01) return "none";
-  if (goo < 0.01) return `blur(${rise.toFixed(2)}px)`;
-  if (rise < 0.01) return `blur(${goo.toFixed(2)}px)`;
-  return `blur(${goo.toFixed(2)}px) blur(${rise.toFixed(2)}px)`;
+  // Two Gaussian blurs compose into one with a root-sum-square radius. A single
+  // filter pass is both more accurate and cheaper than chaining two blurs.
+  const total = Math.hypot(Math.max(0, gooPx), Math.max(0, risePx));
+  return total < 0.01 ? "none" : `blur(${total.toFixed(2)}px)`;
 }
 
 function resolveFlow(flow: RiseFlowValue, context: RiseFlowContext): RiseFlow {

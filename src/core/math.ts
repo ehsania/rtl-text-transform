@@ -20,18 +20,25 @@ export function clamp01(value: number): number {
 /**
  * Blur in pixels for a layer at `fraction`.
  *
- * `min(blurEm * fontSizePx * (1 / fraction - 1), 100)`.
- * At fraction 1 the layer is sharp; at fraction 0 it is clamped to 100px.
+ * `min(blurEm * fontSizePx * (1 / fraction - 1), maxBlurPx)`.
+ * At fraction 1 the layer is sharp; at fraction 0 it hits the cap.
  */
-export function blurForFraction(fraction: number, fontSizePx: number, blurEm: number): number {
+export function blurForFraction(
+  fraction: number,
+  fontSizePx: number,
+  blurEm: number,
+  maxBlurPx: number = MAX_BLUR_PX,
+): number {
   const f = clamp01(fraction);
   if (f >= 1) return 0;
-  if (f <= 0) return MAX_BLUR_PX;
+  if (f <= 0) return Math.max(0, maxBlurPx);
 
   const fontSize = Number.isFinite(fontSizePx) && fontSizePx > 0 ? fontSizePx : 16;
   const blurEmSafe = Number.isFinite(blurEm) && blurEm > 0 ? blurEm : 0;
+  const cap =
+    Number.isFinite(maxBlurPx) && maxBlurPx > 0 ? Math.min(MAX_BLUR_PX, maxBlurPx) : MAX_BLUR_PX;
   const blur = blurEmSafe * fontSize * (1 / f - 1);
-  return Math.min(MAX_BLUR_PX, Math.max(0, blur));
+  return Math.min(cap, Math.max(0, blur));
 }
 
 /** Opacity for a layer at `fraction`: `fraction ** 0.4`. */
@@ -49,9 +56,10 @@ export function visualForFraction(
   fraction: number,
   fontSizePx: number,
   blurEm: number,
+  maxBlurPx: number = MAX_BLUR_PX,
 ): VisualState {
   return {
-    blurPx: blurForFraction(fraction, fontSizePx, blurEm),
+    blurPx: blurForFraction(fraction, fontSizePx, blurEm, maxBlurPx),
     opacity: opacityForFraction(fraction),
   };
 }
