@@ -110,12 +110,6 @@ export function createRangeControl(
   };
 }
 
-function selectShell(select: HTMLSelectElement): HTMLElement {
-  const shell = h("span", "select-shell");
-  shell.append(select);
-  return shell;
-}
-
 export interface SelectControl {
   el: HTMLElement;
   select: HTMLSelectElement;
@@ -128,22 +122,45 @@ export function createSelectControl(
   value: string,
   onChange: (value: string) => void,
 ): SelectControl {
-  const wrapper = h("label", "control");
-  wrapper.append(h("span", undefined, label));
+  const wrapper = h("div", "control control--select");
   const select = h("select");
+  select.setAttribute("aria-label", label);
   for (const option of options) {
     const node = h("option", undefined, option.label);
     node.value = option.value;
     if (option.value === value) node.selected = true;
     select.append(node);
   }
-  select.addEventListener("change", () => onChange(select.value));
-  wrapper.append(selectShell(select));
+
+  const labelEl = h("span", "select-label", label);
+  labelEl.setAttribute("aria-hidden", "true");
+  const valueEl = h(
+    "span",
+    "select-value",
+    options.find((option) => option.value === value)?.label ?? value,
+  );
+  valueEl.setAttribute("aria-hidden", "true");
+
+  const shell = h("span", "select-shell");
+  shell.append(labelEl, valueEl, select);
+  wrapper.append(shell);
+
+  const selectedLabel = (): string => {
+    const option = select.selectedOptions[0];
+    return option?.textContent ?? select.value;
+  };
+
+  select.addEventListener("change", () => {
+    valueEl.textContent = selectedLabel();
+    onChange(select.value);
+  });
+
   return {
     el: wrapper,
     select,
     setValue(next: string) {
       select.value = next;
+      valueEl.textContent = selectedLabel();
     },
   };
 }

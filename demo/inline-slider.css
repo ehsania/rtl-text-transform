@@ -83,10 +83,10 @@
 
 .inline-slider__fill-clip {
   position: absolute;
-  inset: 0 2px;
+  inset: 3px;
   z-index: 0;
   overflow: hidden;
-  border-radius: inherit;
+  border-radius: 7px;
   pointer-events: none;
 }
 
@@ -101,14 +101,14 @@
 
 .inline-slider__thumb {
   position: absolute;
-  top: 8px;
+  top: 7px;
   left: 0;
   z-index: 3;
   width: 4px;
-  height: 24px;
+  height: 26px;
   color: inherit;
   pointer-events: none;
-  transform: translateX(8px);
+  transform: translateX(3px);
   will-change: transform;
 }
 
@@ -160,9 +160,9 @@
 .inline-slider .inline-slider__input[type="range"] {
   position: absolute;
   top: 0;
-  right: 12px;
+  right: 7px;
   bottom: 0;
-  left: 8px;
+  left: 3px;
   z-index: 4;
   width: auto;
   height: 100%;
@@ -232,5 +232,15 @@
   .inline-slider__fill,
   .inline-slider__thumb-inner {
     transition: none;
+  }
+}
+
+@media (max-width: 380px) {
+  .inline-slider .inline-slider__label {
+    font-size: 12.5px;
+  }
+
+  .inline-slider .inline-slider__value {
+    font-size: 12px;
   }
 }

@@ -25,6 +25,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `play()` no longer starts automatic cycling when `autoplay` is disabled.
 - Playground examples animate again after switching to another example and back.
 
+### Demo
+
+- UI refinement across the playground: header, theme cycle, toolbar, tabs, dropdowns, sliders and switches.
+
 ## [0.1.0] - 2026-11-08
 
 ### Added
