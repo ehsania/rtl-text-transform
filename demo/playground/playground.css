@@ -9,15 +9,18 @@
   gap: 10px;
 }
 
+.playground-tabs-shell {
+  min-width: 0;
+  padding: 3px;
+  border-radius: 10px;
+  background: color-mix(in srgb, currentColor 7%, transparent);
+}
+
 .playground-tabs {
   display: flex;
   flex-wrap: wrap;
   gap: 3px;
-  height: 40px;
-  padding: 3px;
-  border: 0;
-  border-radius: 10px;
-  background: color-mix(in srgb, currentColor 7%, transparent);
+  min-height: 34px;
 }
 
 .playground-tab {
@@ -91,8 +94,7 @@
 }
 
 .playground-toolbar-controls,
-.playground-toolbar-group,
-.playground-toolbar-actions {
+.playground-toolbar-group {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
@@ -101,14 +103,6 @@
 
 .playground-toolbar-controls {
   gap: 8px 18px;
-}
-
-.playground-toolbar-label {
-  color: var(--text);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: 0;
-  text-transform: none;
 }
 
 .playground-groups {
@@ -132,13 +126,27 @@
     flex-wrap: nowrap;
     overflow-x: auto;
     justify-content: flex-start;
+    scrollbar-width: none;
+  }
+
+  .playground-tabs::-webkit-scrollbar {
+    display: none;
   }
 
   .playground-tab {
-    flex: 0 0 auto;
+    flex: 1 0 auto;
+    padding: 0 10px;
+    font-size: 12.5px;
   }
 
   .playground-toolbar {
     align-items: flex-start;
+  }
+}
+
+@media (max-width: 380px) {
+  .playground-tab {
+    padding: 0 6px;
+    font-size: 12px;
   }
 }

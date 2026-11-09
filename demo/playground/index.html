@@ -44,12 +44,11 @@
       <header class="site-header">
         <div class="site-header-top">
           <div class="identity">
-            <h1>rtl-text-transform</h1>
+            <h1><a class="site-title" href="../">rtl-text-transform</a></h1>
             <span class="version">v0.1.0</span>
           </div>
           <div class="header-actions">
             <nav class="icon-links" aria-label="Project links">
-              <a class="icon-button" data-icon="home" href="../" aria-label="Home" title="Home"></a>
               <a
                 class="icon-button"
                 data-link="github"
@@ -59,32 +58,14 @@
                 title="GitHub"
               ></a>
             </nav>
-            <div class="theme-switch" role="group" aria-label="Theme">
-              <button
-                type="button"
-                data-theme-choice="light"
-                data-icon="sun"
-                aria-label="Light"
-                title="Light"
-                aria-pressed="false"
-              ></button>
-              <button
-                type="button"
-                data-theme-choice="dark"
-                data-icon="moon"
-                aria-label="Dark"
-                title="Dark"
-                aria-pressed="false"
-              ></button>
-              <button
-                type="button"
-                data-theme-choice="system"
-                data-icon="system"
-                aria-label="System"
-                title="System"
-                aria-pressed="false"
-              ></button>
-            </div>
+            <button
+              class="theme-cycle icon-button"
+              type="button"
+              data-theme-cycle
+              data-icon="system"
+              aria-label="Theme: System"
+              title="Theme: System"
+            ></button>
           </div>
         </div>
         <p class="tagline">fluid text transition for rtl language</p>
@@ -96,7 +77,14 @@
       <main class="playground-main">
         <section class="playground-intro" aria-labelledby="playground-title">
           <h2 class="sr-only" id="playground-title">Example playground</h2>
-          <div class="playground-tabs" data-example-tabs role="tablist" aria-label="Example"></div>
+          <div class="playground-tabs-shell">
+            <div
+              class="playground-tabs"
+              data-example-tabs
+              role="tablist"
+              aria-label="Example"
+            ></div>
+          </div>
           <p class="playground-description" data-example-description></p>
         </section>
 

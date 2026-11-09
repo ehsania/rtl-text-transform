@@ -69,7 +69,7 @@
       <header class="site-header">
         <div class="site-header-top">
           <div class="identity">
-            <h1>rtl-text-transform</h1>
+            <h1><a class="site-title" href="./">rtl-text-transform</a></h1>
             <span class="version">v0.1.0</span>
           </div>
           <div class="header-actions">
@@ -82,40 +82,15 @@
                 aria-label="GitHub"
                 title="GitHub"
               ></a>
-              <a
-                class="icon-button"
-                data-icon="play"
-                href="./playground/"
-                aria-label="Playground"
-                title="Playground"
-              ></a>
             </nav>
-            <div class="theme-switch" role="group" aria-label="Theme">
-              <button
-                type="button"
-                data-theme-choice="light"
-                data-icon="sun"
-                aria-label="Light"
-                title="Light"
-                aria-pressed="false"
-              ></button>
-              <button
-                type="button"
-                data-theme-choice="dark"
-                data-icon="moon"
-                aria-label="Dark"
-                title="Dark"
-                aria-pressed="false"
-              ></button>
-              <button
-                type="button"
-                data-theme-choice="system"
-                data-icon="system"
-                aria-label="System"
-                title="System"
-                aria-pressed="false"
-              ></button>
-            </div>
+            <button
+              class="theme-cycle icon-button"
+              type="button"
+              data-theme-cycle
+              data-icon="system"
+              aria-label="Theme: System"
+              title="Theme: System"
+            ></button>
           </div>
         </div>
         <p class="tagline">fluid text transition for rtl language</p>

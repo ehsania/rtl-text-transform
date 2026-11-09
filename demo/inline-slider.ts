@@ -1,8 +1,8 @@
 import "./inline-slider.css";
 
 const TICK_COUNT = 10;
-const TRACK_START = 8;
-const TRACK_END_INSET = 12;
+const TRACK_START = 3;
+const TRACK_END_INSET = 7;
 const FILL_LEAD = 8;
 
 export interface InlineSlider {
@@ -117,8 +117,8 @@ export function enhanceInlineSlider(
     const x = TRACK_START + progress * (width - TRACK_START - TRACK_END_INSET);
     thumb.style.transform = `translateX(${x}px)`;
 
-    const fillRight = progress >= 1 ? width - 2 : Math.min(width - 2, x + FILL_LEAD);
-    fill.style.transform = `translateX(${fillRight - (width - 2)}px)`;
+    const fillRight = progress >= 1 ? width - 3 : Math.min(width - 3, x + FILL_LEAD);
+    fill.style.transform = `translateX(${fillRight - (width - 3)}px)`;
 
     const part = Math.max(overlapAt(x, labelStart, labelEnd), overlapAt(x, valueStart, valueEnd));
     bar.style.opacity = String(1 - part);

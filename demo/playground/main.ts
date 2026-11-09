@@ -161,37 +161,19 @@ const speed = createSegmented<"1" | "0.5" | "0.25">(
   },
 );
 
-const replayButton = h("button", "control-button", "Replay");
-replayButton.type = "button";
-replayButton.addEventListener("click", () => {
-  const current = activeExample();
-  if (!current) return;
-  current.instance.replay();
-  syncToolbar(current.instance);
-});
-
-const resetButton = h("button", "control-button", "Reset");
-resetButton.type = "button";
-resetButton.addEventListener("click", () => {
-  const current = activeExample();
-  if (!current) return;
-  current.instance.reset();
-  syncToolbar(current.instance);
-  window.dispatchEvent(new Event("resize"));
-});
-
-function toolbarGroup(label: string, control: HTMLElement): HTMLElement {
+const toolbarGroup = (control: HTMLElement): HTMLElement => {
   const group = h("div", "playground-toolbar-group");
-  group.append(h("span", "playground-toolbar-label", label), control);
+  group.append(control);
   return group;
-}
+};
 
-const toolbarControls = h("div", "playground-toolbar-controls");
-toolbarControls.append(toolbarGroup("Language", language.el), toolbarGroup("Speed", speed.el));
+const toolbarStart = h("div", "playground-toolbar-controls");
+toolbarStart.append(toolbarGroup(language.el));
 
-const toolbarActions = h("div", "playground-toolbar-actions");
-toolbarActions.append(replayButton, resetButton);
-toolbar.append(toolbarControls, toolbarActions);
+const toolbarEnd = h("div", "playground-toolbar-controls");
+toolbarEnd.append(toolbarGroup(speed.el));
+
+toolbar.append(toolbarStart, toolbarEnd);
 
 tabsHost.addEventListener("keydown", (event) => {
   const target = event.target;
