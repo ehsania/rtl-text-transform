@@ -218,7 +218,7 @@ export function createCounterExample({ controls }: ExampleOptions): ExampleInsta
       lazy.morph?.pause();
     },
     resume() {
-      if (state.autoplay) lazy.morph?.play();
+      lazy.morph?.play();
     },
     destroy() {
       replayToken += 1;

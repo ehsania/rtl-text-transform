@@ -691,7 +691,7 @@ export function createMorph(el: HTMLElement, options: MorphOptions = {}): Morph 
       pending = null;
       void startMorph(queued.text).then(queued.resolve, queued.resolve);
     }
-    if (words.length > 1 && canAutoAdvance()) {
+    if (autoplay && words.length > 1 && canAutoAdvance()) {
       auto = true;
       if (!transition && autoRest === null) autoRest = restTime;
     }

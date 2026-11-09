@@ -198,7 +198,7 @@ export function createTabsExample({ controls }: ExampleOptions): ExampleInstance
       lazy.morph?.pause();
     },
     resume() {
-      if (state.autoplay) lazy.morph?.play();
+      lazy.morph?.play();
     },
     destroy() {
       lazy.destroy();
