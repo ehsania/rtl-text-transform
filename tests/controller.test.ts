@@ -304,6 +304,40 @@ describe("goo morph", () => {
 
     morph.destroy();
   });
+
+  it("unpauses manual morphs without starting autoplay", async () => {
+    const clock = installFrameClock();
+    const host = createHost("A");
+    const morph = createMorph(host, {
+      words: ["A", "B"],
+      autoplay: false,
+      morphTime: 1,
+      restTime: 0,
+      effects: { goo: { atRest: false } },
+    });
+    const { incoming, live } = layers(host);
+
+    morph.pause();
+    morph.play();
+    clock.step(0);
+    clock.step(100);
+
+    // autoplay was never enabled, so no automatic morph starts.
+    expect(live.textContent).toBe("A");
+
+    const promise = morph.setText("B");
+    clock.step(0);
+    clock.step(100);
+
+    expect(Number.parseFloat(incoming.style.opacity)).toBeGreaterThan(0);
+    expect(Number.parseFloat(incoming.style.opacity)).toBeLessThan(1);
+
+    clock.frames(10, 100);
+    await promise;
+    expect(live.textContent).toBe("B");
+
+    morph.destroy();
+  });
 });
 
 describe("rise morph", () => {

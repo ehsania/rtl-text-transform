@@ -20,6 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Redundant inline style writes are skipped when the value has not changed.
 - Chunk spans no longer promote themselves for filter changes via `will-change`.
 
+### Fixed
+
+- `play()` no longer starts automatic cycling when `autoplay` is disabled.
+- Playground examples animate again after switching to another example and back.
+
 ## [0.1.0] - 2026-11-08
 
 ### Added

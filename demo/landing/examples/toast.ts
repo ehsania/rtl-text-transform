@@ -122,7 +122,7 @@ export function createToastExample({ controls }: ExampleOptions): ExampleInstanc
       lazy.morph?.pause();
     },
     resume() {
-      if (state.autoplay) lazy.morph?.play();
+      lazy.morph?.play();
     },
     destroy() {
       lazy.destroy();

@@ -369,7 +369,7 @@ interface Morph {
 - **`setText(text)`** morphs from the current visual state. If a goo-only morph is running, the winning layer keeps its exact current opacity and blur, so the new morph does not jump. A rise or combined morph fast-forwards first.
 - **`next()`** advances one entry in `words`. It returns a resolved promise when there is nowhere to go (no words, or `loop: false` at the end).
 - **`setWords(words)`** replaces the list. The current reference text is kept if it is still in the list; otherwise the index resets to zero.
-- **`play() / pause()`** resume or freeze the animation clock and automatic cycling. While paused, `setText()` and `next()` apply immediately instead of animating, so calls never hang.
+- **`play() / pause()`** resume or freeze the animation clock and automatic cycling. `play()` only restarts automatic cycling when `autoplay` is enabled. While paused, `setText()` and `next()` apply immediately instead of animating, so calls never hang.
 - **`update(partial)`** changes options in place. Nested effect patches merge with current values, so `update({ effects: { rise: { stagger: 60 } } })` keeps the other rise settings. Changing the goo threshold releases and re-acquires the shared SVG filter.
 - **`destroy()`** cancels the loop, removes listeners and the filter reference, removes the layers and live region, and restores the host's original children, `dir`/`lang`, and touched inline styles. Safe to call twice.
 

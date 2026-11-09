@@ -347,7 +347,7 @@ export function createButtonExample({ controls }: ExampleOptions): ExampleInstan
     reset,
     pause,
     resume() {
-      if (state.autoplay) lazy.morph?.play();
+      lazy.morph?.play();
     },
     destroy() {
       destroyed = true;
