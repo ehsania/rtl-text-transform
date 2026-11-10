@@ -1460,7 +1460,8 @@ td:first-child {
 
 .site-footer nav {
   display: flex;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 10px 16px;
 }
 
 .site-footer a {
